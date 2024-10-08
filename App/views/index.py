@@ -6,9 +6,9 @@ from App.controllers import (
     create_and_confirm_tutor,
     create_course,
     get_course_by_id,
-    get_all_courses,
-    show_staff_in_course,
-    get_all_staff,
+    get_all_courses_json,
+    get_staff_in_course_json,
+    get_all_staff_json,
     assign_lecturer,
     assign_ta,
     assign_tutor
@@ -45,36 +45,37 @@ def get_all_course_staff(course_id):
     if not courses:
         return jsonify({"message": "Course not found"}), 404
 
-    staff = show_staff_in_course(courses.id)
+    staff = get_staff_in_course_json(courses.id)
 
     if not staff:
         return jsonify({"message": "Could not find staff for this course"}),404
-    
-    result = [staff_course.get_json() for staff_course in staff]
-    return jsonify(result), 200
+
+    # result = [staff_course.get_json() for staff_course in staff]
+    return jsonify(staff), 200
 
 
 #GET /list_courses - retrieve a list of the courses in the database
 @index_views.route('/list_courses', methods=['GET'])
 def get_courses():
-    courses = get_all_courses()
+    # courses = get_all_courses()
+    result = get_all_courses_json()
 
-    if not courses:
+    if not result:
         return jsonify(({"message:", "No courses exist"})), 404
     
-    result = [course.get_json() for course in courses]
+    # result = [course.get_json() for course in courses]
     return jsonify(result), 200
 
 #GET /list_staff - retrieve a list of the staff in the database
 @index_views.route('/list_staff', methods=['GET'])
 def get_staff():
-    staff = get_all_staff()
+    staff = get_all_staff_json()
 
     if not staff:
         return jsonify(({"message:", "No courses exist"})), 404
-    
-    result = [staff_member.get_json() for staff_member in staff]
-    return jsonify(result), 200
+
+    # result = [staff_member.get_json() for staff_member in staff]
+    return jsonify(staff), 200
 
 # POST METHODS - add data to the database by creation of a new object
 

@@ -40,6 +40,14 @@ def show_staff_in_course(courseID):
     
     return None
 
+def get_staff_in_course_json(courseID):
+    staff_c = show_staff_in_course(courseID)
+
+    if not staff_c:
+        return []
+    staff_c = [staff_cs.get_json for staff_cs in staff_c]
+    return staff_c
+
 def print_staff_info(staff_course):
     if staff_course:
         lecturer =  Lecturer.query.filter_by(id = staff_course.lecturerID).first()

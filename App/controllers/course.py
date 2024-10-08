@@ -48,6 +48,13 @@ def get_all_courses():
         print('No courses available.')    
     return None
 
+def get_all_courses_json():
+    courses = get_all_courses()
+    if not courses:
+        return []
+    result = [course.get_json() for course in courses]
+    return result
+
 def delete_course(id):
 
     course = get_course_by_id(id)
