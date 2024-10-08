@@ -156,6 +156,7 @@ def create_tutors_view():
 
 
 @index_views.route('/courses/<int:course_id>/staff/lecturer', methods=['POST'])
+@jwt_required()
 def assign_lecturer_view(course_id):
     data = request.get_json()
     lecturer_id = data.get('id')
@@ -168,6 +169,7 @@ def assign_lecturer_view(course_id):
 
 
 @index_views.route('/courses/<int:course_id>/staff/ta', methods=['POST'])
+@jwt_required()
 def assign_ta_view(course_id):
     data = request.get_json()
     ta_id = data.get('id')
@@ -179,6 +181,7 @@ def assign_ta_view(course_id):
     return jsonify({"message": result}), 200
 
 @index_views.route('/courses/<int:course_id>/staff/tutor', methods=['POST'])
+@jwt_required()
 def assign_tutor_view(course_id):
     data = request.get_json()
     tutor_id = data.get('id')
@@ -187,5 +190,44 @@ def assign_tutor_view(course_id):
         return jsonify({"message": "Missing tutor ID."}), 400
 
     result = assign_tutor(course_id, tutor_id)
+    return jsonify({"message": result}), 200
+
+@index_views.route('/lecturer', methods=['DELETE'])
+@jwt_required()
+def terminate_lecturer():
+    data = request.get_json()
+    lecturer_id = data.get('id')
+
+    if not lecturer_id:
+        return jsonify({"message": "Missing lecturer ID."})
+    
+    result = fire_lecturer(lecturer_id)
+
+    return jsonify({"message": result}), 200
+
+@index_views.route('/teaching_assistant', methods=['DELETE'])
+@jwt_required()
+def terminate_ta():
+    data = request.get_json()
+    ta_id = data.get('id')
+
+    if not ta_id:
+        return jsonify({"message": "Missing teaching assistant ID."})
+    
+    result = fire_teaching_assistant(ta_id)
+
+    return jsonify({"message": result}), 200
+
+@index_views.route('/tutor', methods=['DELETE'])
+@jwt_required()
+def terminate_tutor():
+    data = request.get_json()
+    tutor_id = data.get('id')
+
+    if not tutor_id:
+        return jsonify({"message": "Missing tutor ID."})
+    
+    result = fire_tutor(tutor_id)
+
     return jsonify({"message": result}), 200
 

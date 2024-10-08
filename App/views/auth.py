@@ -33,14 +33,24 @@ def identify_page():
 def login_action():
     data = request.form
     token = login(data['username'], data['password'])
-    response = redirect(request.referrer)
+
     if not token:
-        flash('Bad username or password given'), 401
+        flash('Bad username or password given')
         return jsonify({"message": "Bad username or password given"}), 401
+    
+    flash('Login Successful')
+
+    # For postman since request.referrer would be None
+    if request.referrer:
+        redirect_url = request.referrer
     else:
-        flash('Login Successful')
-        set_access_cookies(response, token)
+        redirect_url = url_for('index_views.index_page')  
+
+    response = redirect(redirect_url)
+    set_access_cookies(response, token) 
+
     return response, 302
+
 
 @auth_views.route('/logout', methods=['GET'])
 def logout_action():

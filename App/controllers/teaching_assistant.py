@@ -13,7 +13,7 @@ def create_teaching_assistant(prefix, firstName, lastName, faculty, username, pa
         username=username,
         password=password
     )
-     
+
     db.session.add(teachingAssistant)
     try:
         db.session.commit()
@@ -37,8 +37,12 @@ def fire_teaching_assistant(id):
     teachingAssistant = TeachingAssistant.query.filter_by(id = id).first()
 
     if teachingAssistant:
+        name = teachingAssistant.prefix + " " + teachingAssistant.firstName + " " + teachingAssistant.lastName
         db.session.delete(teachingAssistant)
         db.session.commit()
+        return "Teaching assistant: " + name +  " fired."
+    
+    return "Invalid teaching assistant id."
 
 def add_teachingAssistant(courseid, ta_id):
     # Check if a record for the course already exists

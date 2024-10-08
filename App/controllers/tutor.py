@@ -33,8 +33,12 @@ def fire_tutor(id):
     tutor = Tutor.query.filter_by(id = id).first()
 
     if tutor:
+        name = tutor.prefix + " " + tutor.firstName + " " + tutor.lastName
         db.session.delete(tutor)
         db.session.commit()
+        return "Tutor: " + name +  " fired."
+    
+    return "Invalid tutor id."
 
 # def add_tutor(courseid, tutorid):
 #     # Check if the relationship already exists
@@ -87,7 +91,7 @@ def validate_faculty(faculty):
 
 def create_and_confirm_tutor(prefix, firstName, lastName, faculty, username, password):
     if not validate_prefix(prefix):
-        return "Invalid prefix. Use: Prof., Dr., Mrs., Mr., or Ms."
+        return "Invalid prefix. Use: Dr., Mrs., Mr., or Ms."
 
     if not validate_faculty(faculty):
         return "Invalid faculty. Use: FOE, FST, FSS, FMS, FHE, FOL, FFA, or FOS"
