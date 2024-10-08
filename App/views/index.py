@@ -37,7 +37,7 @@ def health_check():
 
 @index_views.route('/get_course_staff/<int:course_id>/staff', methods=['GET'])
 @jwt_required()
-def get_all_courses(course_id):
+def get_all_course_staff(course_id):
     courses = get_course_by_id(course_id)
 
     if not courses:
