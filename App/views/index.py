@@ -46,7 +46,7 @@ def get_all_courses(course_id):
     staff = show_staff_in_course(courses.id)
 
     if not staff:
-        return jsonify({"message": "Could not find stafff for this course"})
+        return jsonify({"message": "Could not find staff for this course"})
 
     staff = staff.get_json()
     return jsonify(staff), 200
@@ -66,10 +66,11 @@ def create_course_view():
 
     course = create_course(name, faculty)
 
-    if course is not None:
-        return jsonify({"message": course}), 201
+    if course is not None and course != "Incorrect faculty selected. Please use: FOE, FST, FSS, FMS, FHE, FOL, FFA, or FOS":
+        course = course.get_json()
+        return jsonify(course), 201
     else:
-        return jsonify({"error": course}), 400
+        return jsonify({"error": "Incorrect faculty selected. Please use: FOE, FST, FSS, FMS, FHE, FOL, FFA, or FOS"}), 400
 
 
 # POST /lecturers – Create a lecturer (Admin only)
@@ -103,9 +104,9 @@ def create_teaching_assisstant_view():
     username = data.get('username')
     password = data.get('password')
 
-    result = create_and_confirm_ta(prefix=prefix, firstName=firstName, lastName=lastName, faculty=faculty, username=username, password=password)
+    result = create_and_confirm_ta(prefix, firstName, lastName, faculty, username, password)
 
-    if "Teaching assistant created" in result:
+    if "Teaching Assistant created" in result:
         return jsonify({"message": result}), 201
     else:
         return jsonify({"error": result}), 400
@@ -132,7 +133,7 @@ def create_tutors_view():
 
 
 @index_views.route('/courses/<int:course_id>/staff/lecturer', methods=['POST'])
-def assign_lecturer_view():
+def assign_lecturer_view(course_id):
     data = request.get_json()
     lecturer_id = data.get('id')
     

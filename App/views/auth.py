@@ -1,8 +1,10 @@
 from flask import Blueprint, render_template, jsonify, request, flash, send_from_directory, flash, redirect, url_for
 from flask_jwt_extended import jwt_required, current_user, unset_jwt_cookies, set_access_cookies
 
+from App.controllers.user import get_all_users
 
-from.index import index_views
+
+from .index import index_views
 
 from App.controllers import (
     login
@@ -34,10 +36,11 @@ def login_action():
     response = redirect(request.referrer)
     if not token:
         flash('Bad username or password given'), 401
+        return jsonify({"message": "Bad username or password given"}), 401
     else:
         flash('Login Successful')
-        set_access_cookies(response, token) 
-    return response
+        set_access_cookies(response, token)
+    return response, 302
 
 @auth_views.route('/logout', methods=['GET'])
 def logout_action():

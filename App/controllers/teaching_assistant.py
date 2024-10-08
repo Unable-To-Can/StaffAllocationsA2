@@ -13,14 +13,15 @@ def create_teaching_assistant(prefix, firstName, lastName, faculty, username, pa
         username=username,
         password=password
     )
-
+     
+    db.session.add(teachingAssistant)
     try:
-        db.session.add(teachingAssistant)
         db.session.commit()
+        return teachingAssistant
     except IntegrityError as e:
         db.session.rollback()
-        print(e.orig)
-    return teachingAssistant
+        print(f"Error creating TA: {e}")
+        return None
 
 def get_teachingAssistant(id):
 
@@ -80,7 +81,11 @@ def create_and_confirm_ta(prefix, firstName, lastName, faculty, username, passwo
         return "Invalid faculty. Use: FOE, FST, FSS, FMS, FHE, FOL, FFA, or FOS"
 
     ta = create_teaching_assistant(prefix, firstName, lastName, faculty, username, password)
-    return f'Teaching Assistant created: {ta.prefix} {ta.firstName} {ta.lastName}. ID: {ta.id}'
+
+    if ta is None:
+        return f'Teaching assistant could not be created'
+    
+    return f'Teaching Assistant created {ta.prefix} {ta.firstName} {ta.lastName}. ID: {ta.id}'
 
 
 def assign_ta(courseid, ta_id):

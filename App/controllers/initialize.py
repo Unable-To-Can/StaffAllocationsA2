@@ -4,6 +4,7 @@ from .tutor import *
 from .teaching_assistant import *
 from .staff_course import *
 from .course import *
+from .admin import *
 from App.database import db
 
 
@@ -11,7 +12,7 @@ def initialize():
     db.drop_all()
     db.create_all()
 
-    create_user("bob","bobpass")
+    create_admin("bob","bobpass")
 
     create_course('Introduction to Psychology', 'FSS')
     create_course('Introduction to C++', 'FST')
