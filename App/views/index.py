@@ -41,12 +41,12 @@ def get_all_courses(course_id):
     courses = get_course_by_id(course_id)
 
     if not courses:
-        return jsonify({"message": "Course not found"})
+        return jsonify({"message": "Course not found"}), 400
 
     staff = show_staff_in_course(courses.id)
 
     if not staff:
-        return jsonify({"message": "Could not find staff for this course"})
+        return jsonify({"message": "Could not find staff for this course"}), 400
 
     staff = staff.get_json()
     return jsonify(staff), 200
