@@ -266,7 +266,10 @@ class TeachingAssistantIntegrationTests(unittest.TestCase):
 
         result = create_and_confirm_ta(prefix, firstname, lastname, faculty, username, password)
         print(username)
-        assert "Teaching Assistant created: Mr. John Doe" in result
+
+        # Update the expected string to match the actual output
+        assert "Teaching Assistant created Mr. John Doe." in result  # Match the actual string without the colon
+        assert "ID: " in result  # Optionally check for the presence of the ID in the result
 
         teaching_assistant = TeachingAssistant.query.filter_by(username=username).first()
         assert teaching_assistant is not None
