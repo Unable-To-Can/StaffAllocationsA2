@@ -49,7 +49,8 @@ def login_action():
     response = redirect(redirect_url)
     set_access_cookies(response, token) 
 
-    return response, 302
+    json_data = jsonify("message": "login successful")
+    return json_data, 302
 
 
 @auth_views.route('/logout', methods=['GET'])
