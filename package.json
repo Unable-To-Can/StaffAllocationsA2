@@ -8,7 +8,7 @@
     "serve": "flask run",
     "e2e": "mocha ./e2e/test.js",
     "prod-serve": "gunicorn -c gunicorn_config.py wsgi:app",
-    "test": "newman run \"C:/Users/jonat/OneDrive - The University of the West Indies, St. Augustine/Year 3/SoftEng/Assignment2/StaffAllocationsA2/collection.json\""
+    "test": "newman run \"C:/Users/jonat/OneDrive - The University of the West Indies, St. Augustine/Year 3/SoftEng/Assignment2/StaffAllocationsA2/collection.json/"
   },
   "repository": {
     "type": "git",

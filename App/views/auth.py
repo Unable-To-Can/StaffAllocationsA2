@@ -63,11 +63,12 @@ def user_login_api():
     token = login(data['username'], data['password'])
     
     if not token:
-        return jsonify({"message": "Bad username or password given"}), 401
+        return jsonify({"error": "Bad username or password given"}), 401
     
-    response = jsonify({"access_token": token})
+    response = jsonify({"message": "Login successful", "access_token": token})
     set_access_cookies(response, token)
-    return response
+    return response, 200  
+
 
 
 @auth_views.route('/api/identify', methods=['GET'])

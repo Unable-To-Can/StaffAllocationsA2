@@ -219,16 +219,17 @@ class TutorIntegrationTests(unittest.TestCase):
         assert tutor.faculty == faculty
 
     def test_create_tutor_with_invalid_prefix(self):
-            prefix = "InvalidPrefix"
-            firstname = "Jane"
-            lastname = "Doe"
-            faculty = "FOE"
-            username = "janedoe"
-            password = "password123"
+        prefix = "InvalidPrefix"
+        firstname = "Jane"
+        lastname = "Doe"
+        faculty = "FOE"
+        username = "janedoe"
+        password = "password123"
 
-            result = create_and_confirm_tutor(prefix, firstname, lastname, faculty, username, password)
+        result = create_and_confirm_tutor(prefix, firstname, lastname, faculty, username, password)
 
-            assert result == "Invalid prefix. Use: Prof., Dr., Mrs., Mr., or Ms."
+        assert result == "Invalid prefix. Use: Dr., Mrs., Mr., or Ms."
+
 
     def test_create_tutor_with_invalid_faculty(self):
         prefix = "Ms."
