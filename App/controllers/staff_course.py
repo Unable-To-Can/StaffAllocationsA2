@@ -36,9 +36,24 @@ def show_staff_in_course(courseID):
     staff_in_course = StaffCourse.query.filter_by(courseID = courseID).first()
 
     if staff_in_course:
+        print_staff_info(staff_in_course)
         return staff_in_course
     
     return None
+
+def get_staff_in_course_json(course_id):
+    staff_c = StaffCourse.query.filter_by(courseID=course_id).all()  
+    staff_list = []
+    for staff_cs in staff_c:
+        staff_list.append({
+            "id": staff_cs.id,  
+            "lecturerID": staff_cs.lecturerID,  
+            "teachingAssistantID": staff_cs.teachingAssistantID,  
+            "tutorID": staff_cs.tutorID  
+        })
+    return staff_list
+
+
 
 def print_staff_info(staff_course):
     if staff_course:

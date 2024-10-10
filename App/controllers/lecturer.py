@@ -37,8 +37,12 @@ def fire_lecturer(id):
     lecturer = Lecturer.query.filter_by(id = id).first()
 
     if lecturer:
+        name = lecturer.prefix + " " + lecturer.firstName + " " + lecturer.lastName
         db.session.delete(lecturer)
         db.session.commit()
+        return "Lecturer: " + name + " fired."
+    
+    return "Invalid lecturer id."
 
 def add_lecturer(courseid, lecturer_id):
     # Check if a record already exists for the given courseID

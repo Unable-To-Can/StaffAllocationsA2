@@ -1,6 +1,6 @@
 from App.models import User, lecturer, teaching_assistant, tutor
 from App.database import db
-#irrelevant controller
+
 def create_user(username, password):
     newuser = User(username=username, password=password)
     db.session.add(newuser)
