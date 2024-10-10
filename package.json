@@ -7,7 +7,8 @@
     "init": "flask init",
     "serve": "flask run",
     "e2e": "mocha ./e2e/test.js",
-    "prod-serve": "gunicorn -c gunicorn_config.py wsgi:app"
+    "prod-serve": "gunicorn -c gunicorn_config.py wsgi:app",
+    "test": "newman run \"C:/Users/jonat/OneDrive - The University of the West Indies, St. Augustine/Year 3/SoftEng/Assignment2/StaffAllocationsA2/collection.json\""
   },
   "repository": {
     "type": "git",
@@ -22,7 +23,8 @@
   "homepage": "https://github.com/Snickdx/flask-template#readme",
   "dependencies": {
     "chai": "^4.3.6",
+    "flask-template": "file:",
     "mocha": "^10.0.0",
-    "puppeteer-core": "^17.1.3"
+    "puppeteer-core": "^23.5.1"
   }
 }

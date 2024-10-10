@@ -59,6 +59,7 @@ def get_all_course_staff(course_id):
     return jsonify(staff), 200
 
 
+
 # GET /list_courses - retrieve a list of the courses in the database
 @index_views.route('/list_courses', methods=['GET'])
 def get_courses():

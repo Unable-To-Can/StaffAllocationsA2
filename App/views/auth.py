@@ -49,7 +49,10 @@ def login_action():
     response = redirect(redirect_url)
     set_access_cookies(response, token) 
 
-    json_data = jsonify("message": "login successful")
+    json_data = {"message": "Login successful"}
+
+    # return response, 302
+
     return json_data, 302
 
 

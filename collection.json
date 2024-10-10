@@ -1,0 +1,1503 @@
+{
+	"info": {
+		"_postman_id": "202fe353-8181-456e-9a03-991be521cf31",
+		"name": "SWE II Assignment 2",
+		"description": "This collection is designed to test 2StepsAhead's Software Engineering II Rest API.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33084822"
+	},
+	"item": [
+		{
+			"name": "LOGIN OK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Login should be successful\", function () {",
+							"    pm.response.to.have.status(200); ",
+							"});",
+							"",
+							"pm.test(\"Check if access cookie is set\", function () {",
+							"    var cookie = pm.cookies.get('access_token_cookie');  // Ensure the cookie is set",
+							"    pm.expect(cookie).to.not.be.null;",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "bob",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "bobpass",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"login"
+					]
+				},
+				"description": "This uses a correct user and password as specified in initialize.py"
+			},
+			"response": []
+		},
+		{
+			"name": "LOGIN FAIL",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Login should be successful\", function () {",
+							"    pm.response.to.have.status(401);  // Check that the status is 302 (for success)",
+							"});",
+							"",
+							"pm.test(\"Check message\", function () {",
+							"    var jsonData = pm.response.json();",
+							"",
+							"    pm.expect(jsonData.message).to.include(\"Bad username or password given\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "bobert",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "bobpass23",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"login"
+					]
+				},
+				"description": "Uses incorrect user and password"
+			},
+			"response": []
+		},
+		{
+			"name": "GET STAFF OK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has the correct format\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    ",
+							"    // Check that all required fields are present",
+							"    pm.expect(jsonData).to.have.property(\"courseID\");",
+							"    pm.expect(jsonData).to.have.property(\"id\");",
+							"    pm.expect(jsonData).to.have.property(\"lecturerID\");",
+							"    pm.expect(jsonData).to.have.property(\"teachingAssistantID\");",
+							"    pm.expect(jsonData).to.have.property(\"tutorID\");",
+							"",
+							"    // Check that each field has the correct data type",
+							"    pm.expect(jsonData.courseID).to.be.a(\"number\");",
+							"    pm.expect(jsonData.id).to.be.a(\"number\");",
+							"    pm.expect(jsonData.lecturerID).to.be.a(\"number\");",
+							"    pm.expect(jsonData.teachingAssistantID).to.be.a(\"number\");",
+							"    pm.expect(jsonData.tutorID).to.be.a(\"number\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "access_token",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/get_course_staff/{{course_id2}}/staff",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"get_course_staff",
+						"{{course_id2}}",
+						"staff"
+					]
+				},
+				"description": "Should return the id's of the lecturer, TA and tutor assigned to the course."
+			},
+			"response": []
+		},
+		{
+			"name": "GET STAFF FAIL",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Staff not found\", function(){",
+							"    pm. response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Course not found\", function(){",
+							"    var jsonData = pm.response.json();",
+							"",
+							"    pm.expect(jsonData.message.includes(\"Course not found\") || jsonData.message.includes(\"Could not find staff for this course\"));",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/get_course_staff/6/staff",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"get_course_staff",
+						"6",
+						"staff"
+					]
+				},
+				"description": "Will either return no staff available for the course or that the course does not exist."
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE COURSE OK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201 - Course created successfully\", function () {",
+							"    pm.response.to.have.status(201);  // Check that the response status is 201",
+							"});",
+							"",
+							"pm.test(\"Course creation message is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"",
+							"    pm.expect(jsonData).to.have.property(\"name\");",
+							"    pm.expect(jsonData).to.have.property(\"faculty\");",
+							"",
+							"    pm.expect(jsonData.name).to.be.a(\"string\");",
+							"    pm.expect(jsonData.faculty).to.be.a(\"string\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Intro to Robotics\",\n  \"faculty\": \"FOE\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/courses",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"courses"
+					]
+				},
+				"description": "Takes a course name and a faculty and creates a course"
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE COURSE FAIL",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" pm.test(\"Status code is 400 - Course creation failed\", function(){",
+							"    pm.response.to.have.status(400);",
+							" });",
+							"",
+							"pm.test(\"Error message is present in case of failure\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    ",
+							"    pm.expect(jsonData).to.have.property(\"error\");  // Ensure the 'error' property is present",
+							"    pm.expect(jsonData.error).to.be.a(\"string\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"Intro to Robotics\",\n    \"faculty\": \"Engineering\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/courses",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"courses"
+					]
+				},
+				"description": "If the wrong faculty is selected then it fails and gives a list of the accepted faculties."
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE LECTURER OK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Create lecturer successfully\", function(){",
+							"    pm.response.to.have.status(201);",
+							"})",
+							"",
+							"pm.test(\"Expected output\", function(){",
+							"    var jsonData = pm.response.json();",
+							"",
+							"    pm.expect(jsonData).to.have.property(\"message\");",
+							"",
+							"    pm.expect(jsonData.message).to.be.a(\"string\");",
+							" ",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"prefix\": \"Ms.\",\n    \"firstName\": \"Donna\",\n    \"lastName\": \"Lip\",\n    \"faculty\": \"FST\",\n    \"username\": \"donna\",\n    \"password\": \"donnapass\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/lecturers",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"lecturers"
+					]
+				},
+				"description": "Takes a prefix, first name, last name, faculty, username and password and creates a lecturer. Will fail on second run because usernames must be unique."
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE LECTURER FAIL PREFIX",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Create lecturer successfully\", function(){",
+							"    pm.response.to.have.status(400);",
+							"})",
+							"",
+							"pm.test(\"Expected output\", function(){",
+							"    var jsonData = pm.response.json();",
+							"",
+							"    pm.expect(jsonData).to.have.property(\"error\");",
+							"",
+							"    pm.expect(jsonData.error).to.eql(\"Invalid prefix. Use: Prof., Dr., Mrs., Mr., or Ms.\");",
+							" ",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\n    \"prefix\": \"Ms\",\n    \"firstName\": \"Dana\",\n    \"lastName\": \"Lip\",\n    \"faculty\": \"FST\",\n    \"username\":\"dana\",\n    \"password\": \"danapass\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/lecturers",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"lecturers"
+					]
+				},
+				"description": "Will fail because of the wrong prefix supplied."
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE LECTURER FAIL FACULTY",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Create lecturer successfully\", function(){",
+							"    pm.response.to.have.status(400);",
+							"})",
+							"",
+							"pm.test(\"Expected output\", function(){",
+							"    var jsonData = pm.response.json();",
+							"",
+							"    pm.expect(jsonData).to.have.property(\"error\");",
+							"",
+							"    pm.expect(jsonData.error).to.eql(\"Invalid faculty. Use: FOE, FST, FSS, FMS, FHE, FOL, FFA, or FOS\");",
+							" ",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\n    \"prefix\": \"Ms.\",\n    \"firstName\": \"Donna\",\n    \"lastName\": \"Lip\",\n    \"faculty\": \"FSL\",\n    \"username\":\"dana\",\n    \"password\": \"danapass\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/lecturers",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"lecturers"
+					]
+				},
+				"description": "Will fail because of the wrong faculty supplied."
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE TA OK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Create TA successfully\", function(){",
+							"    pm.response.to.have.status(201);",
+							"})",
+							"",
+							"pm.test(\"Expected output\", function(){",
+							"    var jsonData = pm.response.json();",
+							"",
+							"    pm.expect(jsonData).to.have.property(\"message\");",
+							"",
+							"    pm.expect(jsonData.message).to.be.a(\"string\");",
+							" ",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"prefix\": \"Mr.\",\n    \"firstName\": \"Lopez\",\n    \"lastName\": \"Lip\",\n    \"faculty\": \"FST\",\n    \"username\": \"lopez\",\n    \"password\": \"lopezpass\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/teaching_assistants",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"teaching_assistants"
+					]
+				},
+				"description": "Takes a prefix, first name, last name, faculty, username and password and creates a teaching assistant. Will fail on second run because usernames must be unique."
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE TA FAIL PREFIX",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Create TA unsuccessful\", function(){",
+							"    pm.response.to.have.status(400);",
+							"})",
+							"",
+							"pm.test(\"Expected output\", function(){",
+							"    var jsonData = pm.response.json();",
+							"",
+							"    pm.expect(jsonData).to.have.property(\"error\");",
+							"",
+							"    pm.expect(jsonData.error).to.eql(\"Invalid prefix. Use: Dr., Mrs., Mr., or Ms.\");",
+							" ",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"prefix\": \"Mr\",\n    \"firstName\": \"Lopez\",\n    \"lastName\": \"Lip\",\n    \"faculty\": \"FST\",\n    \"username\": \"lopez\",\n    \"password\": \"lopezpass\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/teaching_assistants",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"teaching_assistants"
+					]
+				},
+				"description": "Will fail because of the wrong prefix supplied."
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE TA FAIL FACULTY",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Create TA unsuccessful\", function(){",
+							"    pm.response.to.have.status(400);",
+							"})",
+							"",
+							"pm.test(\"Expected output\", function(){",
+							"    var jsonData = pm.response.json();",
+							"",
+							"    pm.expect(jsonData).to.have.property(\"error\");",
+							"",
+							"    pm.expect(jsonData.error).to.eql(\"Invalid faculty. Use: FOE, FST, FSS, FMS, FHE, FOL, FFA, or FOS\");",
+							" ",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"prefix\": \"Mr.\",\n    \"firstName\": \"Lopez\",\n    \"lastName\": \"Lip\",\n    \"faculty\": \"FSTL\",\n    \"username\": \"lopez\",\n    \"password\": \"lopezpass\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/teaching_assistants",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"teaching_assistants"
+					]
+				},
+				"description": "Will fail because of the wrong faculty supplied."
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE TUTOR OK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Create TA successfully\", function(){",
+							"    pm.response.to.have.status(201);",
+							"})",
+							"",
+							"pm.test(\"Expected output\", function(){",
+							"    var jsonData = pm.response.json();",
+							"",
+							"    pm.expect(jsonData).to.have.property(\"message\");",
+							"",
+							"    pm.expect(jsonData.message).to.be.a(\"string\");",
+							" ",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"prefix\": \"Mr.\",\n    \"firstName\": \"Link\",\n    \"lastName\": \"Lip\",\n    \"faculty\": \"FST\",\n    \"username\": \"link\",\n    \"password\": \"linkpass\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/tutors",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"tutors"
+					]
+				},
+				"description": "Takes a prefix, first name, last name, faculty, username and password and creates a tutor. Will fail on second run because usernames must be unique."
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE TUTOR FAIL PREFIX",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Create TA unsuccessful\", function(){",
+							"    pm.response.to.have.status(400);",
+							"})",
+							"",
+							"pm.test(\"Expected output\", function(){",
+							"    var jsonData = pm.response.json();",
+							"",
+							"    pm.expect(jsonData).to.have.property(\"error\");",
+							"",
+							"    pm.expect(jsonData.error).to.eql(\"Invalid prefix. Use: Dr., Mrs., Mr., or Ms.\");",
+							" ",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"prefix\": \"Mrs\",\n    \"firstName\": \"Kimmy\",\n    \"lastName\": \"Lip\",\n    \"faculty\": \"FST\",\n    \"username\": \"kimmy\",\n    \"password\": \"kimmypass\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/tutors",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"tutors"
+					]
+				},
+				"description": "Will fail because of the wrong prefix supplied."
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE TUTOR FAIL FACULTY",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Create TA unsuccessful\", function(){",
+							"    pm.response.to.have.status(400);",
+							"})",
+							"",
+							"pm.test(\"Expected output\", function(){",
+							"    var jsonData = pm.response.json();",
+							"",
+							"    pm.expect(jsonData).to.have.property(\"error\");",
+							"",
+							"    pm.expect(jsonData.error).to.eql(\"Invalid faculty. Use: FOE, FST, FSS, FMS, FHE, FOL, FFA, or FOS\");",
+							" ",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"prefix\": \"Mrs.\",\n    \"firstName\": \"Kimmy\",\n    \"lastName\": \"Lip\",\n    \"faculty\": \"FSTL\",\n    \"username\": \"kimmy\",\n    \"password\": \"kimmypass\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/tutors",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"tutors"
+					]
+				},
+				"description": "Will fail because of the wrong faculty supplied."
+			},
+			"response": []
+		},
+		{
+			"name": "ASSIGN LECTURER OK",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Check if lecturer is assigned\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(jsonData).to.have.property('message');\r",
+							"\r",
+							"    pm.expect(jsonData.message.includes('assigned to') || jsonData.message.includes('replaced by')).to.be.true; \r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"3\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/courses/{{course_id3}}/staff/lecturer",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"courses",
+						"{{course_id3}}",
+						"staff",
+						"lecturer"
+					]
+				},
+				"description": "Assigns lecturer to course supplied in the url."
+			},
+			"response": []
+		},
+		{
+			"name": "ASSIGN LECTURER FAIL",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Check if lecturer does not exist\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(jsonData).to.have.property('message');\r",
+							"\r",
+							"    pm.expect(jsonData.message.includes(\"Lecturer does not exist.\")).to.be.true; \r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"12\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/courses/{{course_id3}}/staff/lecturer",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"courses",
+						"{{course_id3}}",
+						"staff",
+						"lecturer"
+					]
+				},
+				"description": "Fails due to the incorrect lecturer id."
+			},
+			"response": []
+		},
+		{
+			"name": "ASSIGN TA OK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Check if TA is assigned\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(jsonData).to.have.property('message');\r",
+							"\r",
+							"    pm.expect(jsonData.message.includes('assigned to') || jsonData.message.includes('replaced by')).to.be.true; \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"7\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/courses/{{course_id1}}/staff/ta",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"courses",
+						"{{course_id1}}",
+						"staff",
+						"ta"
+					]
+				},
+				"description": "Assigns TA to the course supplied in the url."
+			},
+			"response": []
+		},
+		{
+			"name": "ASSIGN TA FAIL",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Check if teaching assistant does not exist\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(jsonData).to.have.property('message');\r",
+							"\r",
+							"    pm.expect(jsonData.message.includes(\"Teaching assistant does not exist.\")).to.be.true; \r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"1\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/courses/{{course_id1}}/staff/ta",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"courses",
+						"{{course_id1}}",
+						"staff",
+						"ta"
+					]
+				},
+				"description": "Fails due to the wrong TA id."
+			},
+			"response": []
+		},
+		{
+			"name": "ASSIGN TUTOR OK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Check if tutor is assigned\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(jsonData).to.have.property('message');\r",
+							"\r",
+							"    pm.expect(jsonData.message.includes('assigned to') || jsonData.message.includes('replaced by')).to.be.true; \r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"12\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/courses/{{course_id1}}/staff/tutor",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"courses",
+						"{{course_id1}}",
+						"staff",
+						"tutor"
+					]
+				},
+				"description": "Assigns tutor to thew course id supplied in the url."
+			},
+			"response": []
+		},
+		{
+			"name": "ASSIGN TUTOR FAIL",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Check if tutor does not exist\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(jsonData).to.have.property('message');\r",
+							"\r",
+							"    pm.expect(jsonData.message.includes(\"Tutor does not exist.\")).to.be.true; \r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"1\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/courses/{{course_id1}}/staff/tutor",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"courses",
+						"{{course_id1}}",
+						"staff",
+						"tutor"
+					]
+				},
+				"description": "Fails due to the incorrect tutor id."
+			},
+			"response": []
+		},
+		{
+			"name": "FIRE LECTURER OK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Check if lecturer is fired\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(jsonData).to.have.property('message');\r",
+							"\r",
+							"    pm.expect(jsonData.message.includes('Lecturer:')).to.be.true; \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "bobpass",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "bob",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"2\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/lecturer",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"lecturer"
+					]
+				},
+				"description": "Will fail after second run due to lecturer being deleted."
+			},
+			"response": []
+		},
+		{
+			"name": "FIRE LECTURER FAIL",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"Check if lecturer is fired\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(jsonData).to.have.property('message');\r",
+							"\r",
+							"    pm.expect(jsonData.message.includes('Invalid lecturer id.')).to.be.true; \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"8\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/lecturer",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"lecturer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FIRE TA OK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"Check if lecturer is fired\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(jsonData).to.have.property('message');\r",
+							"\r",
+							"    pm.expect(jsonData.message.includes('Teaching assistant:')).to.be.true; \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"9\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/teaching_assistant",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"teaching_assistant"
+					]
+				},
+				"description": "Will fail after second run due to TA being deleted."
+			},
+			"response": []
+		},
+		{
+			"name": "FIRE TA FAIL",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"Check if TA is fired\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(jsonData).to.have.property('message');\r",
+							"\r",
+							"    pm.expect(jsonData.message.includes('Invalid teaching assistant id.')).to.be.true; \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"1\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/teaching_assistant",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"teaching_assistant"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FIRE TUTOR OK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Check if tutor is fired\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(jsonData).to.have.property('message');\r",
+							"\r",
+							"    pm.expect(jsonData.message.includes('Tutor:')).to.be.true; \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"14\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/tutor",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"tutor"
+					]
+				},
+				"description": "Will fail after second run due to tutor being deleted."
+			},
+			"response": []
+		},
+		{
+			"name": "FIRE TUTOR FAIL",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Check if tutor is fired\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(jsonData).to.have.property('message');\r",
+							"\r",
+							"    pm.expect(jsonData.message.includes('Invalid tutor id.')).to.be.true; \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"1\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/tutor",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"tutor"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "http://127.0.0.1:8080/",
+			"type": "string"
+		},
+		{
+			"key": "course_id1",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "course_id2",
+			"value": "2",
+			"type": "string"
+		},
+		{
+			"key": "course_id3",
+			"value": "3",
+			"type": "string"
+		}
+	]
+}
