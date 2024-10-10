@@ -46,17 +46,45 @@ def health_check():
 @index_views.route('/get_course_staff/<int:course_id>/staff', methods=['GET'])
 @jwt_required()
 def get_all_course_staff(course_id):
-    courses = get_course_by_id(course_id)
+    try:
+        courses = get_course_by_id(course_id)
 
-    if not courses:
-        return jsonify({"message": "Course not found"}), 404
+        if not courses:
+            return jsonify({"message": "Course not found"}), 400
 
-    staff = get_staff_in_course_json(courses.id)
+        staff = get_staff_in_course_json(courses.id)
 
-    if not staff:
-        return jsonify({"message": "Could not find staff for this course"}), 404
+        if not staff:
+            return jsonify({"message": "Could not find staff for this course"}), 400  
 
-    return jsonify(staff), 200
+        lecturerID = None
+        teachingAssistantID = None
+        tutorID = None
+
+        for member in staff:
+            if "lecturerID" in member:
+                lecturerID = member["lecturerID"]
+            if "teachingAssistantID" in member:
+                teachingAssistantID = member["teachingAssistantID"]
+            if "tutorID" in member:
+                tutorID = member["tutorID"]
+
+        response_data = {
+            "courseID": courses.id,
+            "id": courses.id,  
+            "lecturerID": lecturerID,
+            "teachingAssistantID": teachingAssistantID,
+            "tutorID": tutorID
+        }
+
+        return jsonify(response_data), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
+
 
 
 
