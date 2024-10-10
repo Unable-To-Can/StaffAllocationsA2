@@ -142,6 +142,24 @@
   - **Command**: `shell`
   - **Description**: Run a shell in the app context. 
   - **Usage**: `flask shell`
+
+
+
+
+### API Testing with Postman Collection
+To run API tests using the Postman collection, you must have node.js and Newman installed. 
+$  npm install -g newman
+
+
+Then, add a script to your package.json file for running the collection, specifying the path to which the Postman collection file is saved:
+
+"scripts": {
+  "test": "newman run ./path/to/collection.json/"
+}
+
+After adding this, you can run the API tests by executing:
+$ npm test
+
   
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/uwidcit/flaskmvc)
@@ -297,19 +315,6 @@ You can run all application tests with the following command
 $ pytest
 ```
 
-### API Testing with Postman Collection
-To run API tests using the Postman collection, you must have node.js and Newman installed. 
-$  npm install -g newman
-
-
-Then, add a script to your package.json file for running the collection, specifying the path to which the Postman collection file is saved:
-
-"scripts": {
-  "test": "newman run ./path/to/collection.json/"
-}
-
-After adding this, you can run the API tests by executing:
-$ npm test
 
 
 ## Test Coverage
