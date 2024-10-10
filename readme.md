@@ -1,27 +1,148 @@
-/*CLI COMMANDS: must be preceded by flask
-  assignLecturer  Assigns a lecturer to a course even if a lecturer was already assigned. Required parameters: courseID and lecturerID.
-  assignTA        Assigns a teaching assistant to a course even if a TA was already assigned. Required parameters: courseID and teachingAssistantID
-  assignTutor     Assigns a tutor to a course even if a tutor was already assigned. Required parameters: courseID and tutorID.
-  courseStaff     Shows all staff for the course code entered. Required parameters: courseID.
-  courses         Shows the list of all courses.
-  createCourse    This command creates a course, Insert the course name and faculty. Required parameters: courseName and facultyName.
-  createLecturer  Creates a lecturer. Required parameters: prefix, firstName, lastName, faculty.
-  createTA        Creates a teaching assistant. Required parameters: prefix, firstName, lastName, faculty.
-  createTutor     Creates a tutor. Required parameters: prefix, firstName, lastName, faculty.
-  db              Perform database migrations.
-  fireLecturer    Removes lecturer from the database and any course that they are assigned to. Required parameters: lecturerID.
-  fireTA          Removes teaching assistant from the database and any course that they are assigned to. Required parameters: taID.
-  fireTutor       Removes tutor from the database and any course that they are assigned to. Required parameters: tutorID.
-  init            Creates and initializes the database.
-  removeCourse    Removes a course. Required parameters: courseID.
-  removeLecturer  This command removes a lecturer from a course. Required parameters: courseID and lecturerID.
-  removeTA        This command removes a teaching assistant from a course. Required parameters: courseID and teachingAssistantID
-  removeTutor     This command removes a tutor from a course. Required parameters: courseID and tutorID.
-  routes          Show the routes for the app.
-  run             Run a development server.
-  shell           Run a shell in the app context.
-  staff           Shows all staff.
-*/
+# Staff Allocation Platform
+
+*The Staff Allocation Platform CLI application is specifically designed to streamline and manage the allocation of staff, including lecturers, tutors, and teaching assistants. It enables administrators to create courses and staff profiles, as well as assign the appropriate lecturers, tutors, and teaching assistants. Additionally, the application provides functionality for administrators to terminate and remove staff as needed. This application is developed using the Python Flask MVC framework and SQLAlchemy for database management.*
+
+### Functions:
+  - Create course
+  - List courses
+  - Create staff: lecturer, tutor, teaching assistant
+  - List staff
+  - Assign staff: lecturer, tutor, teaching assistant
+  - Fire/Remove staff: lecturer, tutor, teaching assistant
+
+## CLI Commands for Flask Application
+
+### Commands relating to Course
+ 
+- **Create Course Command**: 
+  - **Command**: `createCourse`
+  - **Description**: This command creates a course, Insert the course name and faculty.
+  - **Usage**: `flask createCourse <courseName> <faculty> `
+  - **Example**: `flask user create SWEN FST`
+
+- **List Courses**: 
+  - **Command**: `courses`
+  - **Description**: Shows the list of all courses.
+  - **Usage**: `flask courses`
+
+### Commands relating to Staff
+
+- **List Staff**: 
+  - **Command**: `staff`
+  - **Description**: Shows all staff.
+  - **Usage**: `flask staff `
+ 
+- **List Staff based on Course**: 
+  - **Command**: `courseStaff`
+  - **Description**: Shows all staff for the course code entered.
+  - **Usage**: `flask courseStaff <courseID>`
+  - **Example**: `flask courseStaff 6`
+
+### Commands relating to Lecturer
+
+- **Create Lecturer Command**: 
+  - **Command**: `createLecturer`
+  - **Description**: Creates a lecturer.
+  - **Usage**: `flask createLecturer <prefix> <firstName> <lastName> <faculty> `
+  - **Example**: `flask createLecturer Mr. Nicholas Mendez FST`
+ 
+- **Assign Lecturer Command**: 
+  - **Command**: `assignLecturer`
+  - **Description**: Assigns a lecturer to a course even if a lecturer was already assigned.
+  - **Usage**: `flask assignLecturer <courseID> <lecturerID> `
+  - **Example**: `flask assignLecturer 6 12`
+ 
+- **Fire Lecturer Command**: 
+  - **Command**: `fireLecturer`
+  - **Description**: Removes lecturer from the database and any course that they are assigned to.
+  - **Usage**: `flask fireLecturer <lecturerID>`
+  - **Example**: `flask fireLecturer 12`
+ 
+- **Remove Lecturer Command**: 
+  - **Command**: `removeLecturer`
+  - **Description**: This command removes a lecturer from a course. 
+  - **Usage**: `flask removeLecturer <courseID> <lecturerID> `
+  - **Example**: `flask removeLecturer 6 12`
+ 
+### Commands relating to Tutor
+
+- **Create Tutor Command**: 
+  - **Command**: `createTutor`
+  - **Description**: Creates a tutor.
+  - **Usage**: `flask createTutor <prefix> <firstName> <lastName> <faculty> `
+  - **Example**: `flask createTutor Dr. Amit Ramkisoon FST`
+ 
+- **Assign Tutor Command**: 
+  - **Command**: `assignTutor`
+  - **Description**: Assigns a tutor to a course even if a tutor was already assigned.
+  - **Usage**: `flask assignTutor <courseID> <tutorID> `
+  - **Example**: `flask assignTutor 6 20`
+ 
+- **Fire Tutor Command**: 
+  - **Command**: `fireTutor`
+  - **Description**: Removes tutor from the database and any course that they are assigned to.
+  - **Usage**: `flask fireTutor <tutorID>`
+  - **Example**: `flask fireTutor 20`
+ 
+- **Remove Tutor Command**: 
+  - **Command**: `removeTutor`
+  - **Description**: This command removes a tutor from a course. 
+  - **Usage**: `flask removeTutor <courseID> <tutorID> `
+  - **Example**: `flask removeTutor 6 20`
+ 
+### Commands relating to Teaching Assistant
+
+- **Create Teaching Assistant Command**: 
+  - **Command**: `createTA`
+  - **Description**: Creates a teaching assistant.
+  - **Usage**: `flask createTA <prefix> <firstName> <lastName> <faculty> `
+  - **Example**: `flask createTA Mr. Devon Murray FST`
+ 
+- **Assign Teaching Assistant Command**: 
+  - **Command**: `assignTA`
+  - **Description**: Assigns a teaching assistant to a course even if a teaching assistant was already assigned.
+  - **Usage**: `flask assignTA <courseID> <teachingAssistantID> `
+  - **Example**: `flask assignTA 6 30`
+ 
+- **Fire Teaching Assistant Command**: 
+  - **Command**: `fireTA`
+  - **Description**: Removes teaching assistant from the database and any course that they are assigned to.
+  - **Usage**: `flask fireTA <teachingAssistantID>`
+  - **Example**: `flask fireTA 30`
+ 
+- **Remove Teaching Assistant Command**: 
+  - **Command**: `removeTA`
+  - **Description**: This command removes a teaching assistant from a course. 
+  - **Usage**: `flask removeTA <courseID> <teachingAssistantID> `
+  - **Example**: `flask removeTA 6 30`
+
+### Other Commands
+
+- **Database Migration Command**: 
+  - **Command**: `db`
+  - **Description**: Perform database migrations.
+  - **Usage**: `flask db`
+ 
+- **Initialization Command**: 
+  - **Command**: `init`
+  - **Description**: Creates and initializes the database.
+  - **Usage**: `flask init `
+ 
+- **Routes Command**: 
+  - **Command**: `routes`
+  - **Description**: Show the routes for the app.
+  - **Usage**: `flask routes`
+ 
+- **Run Command**: 
+  - **Command**: `run`
+  - **Description**: Run a development server. 
+  - **Usage**: `flask run`
+ 
+- **Shell Command**: 
+  - **Command**: `shell`
+  - **Description**: Run a shell in the app context. 
+  - **Usage**: `flask shell`
+  
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/uwidcit/flaskmvc)
 <a href="https://render.com/deploy?repo=https://github.com/uwidcit/flaskmvc">
