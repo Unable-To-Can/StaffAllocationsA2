@@ -39,9 +39,11 @@ def login_action():
         return jsonify({"message": "Bad username or password given"}), 401
     
     flash('Login Successful')
-    response = redirect(url_for('auth_views.get_user_page'))
+    response = jsonify({"message": "Login Successful"})
     set_access_cookies(response, token)
     return response
+
+
 
 
 
