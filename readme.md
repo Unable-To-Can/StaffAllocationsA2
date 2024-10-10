@@ -177,10 +177,14 @@ $ pytest
 ```
 
 ### API Testing with Postman Collection
-To run API tests using the Postman collection, you must have Newman installed. Then, add a script to your package.json file for running the collection, specifying the path to which the Postman collection file is saved:
+To run API tests using the Postman collection, you must have node.js and Newman installed. 
+$  npm install -g newman
+
+
+Then, add a script to your package.json file for running the collection, specifying the path to which the Postman collection file is saved:
 
 "scripts": {
-  "test": "newman run ./path/to/collection.json""
+  "test": "newman run ./path/to/collection.json/"
 }
 
 After adding this, you can run the API tests by executing:
