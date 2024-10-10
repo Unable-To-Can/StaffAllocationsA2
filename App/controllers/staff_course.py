@@ -36,6 +36,7 @@ def show_staff_in_course(courseID):
     staff_in_course = StaffCourse.query.filter_by(courseID = courseID).first()
 
     if staff_in_course:
+        print_staff_info(staff_in_course)
         return staff_in_course
     
     return None

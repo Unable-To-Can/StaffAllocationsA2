@@ -35,15 +35,7 @@ def courses_list():
 @app.cli.command("courseStaff", help="Shows all staff for the course code entered")
 @click.argument("courseid")
 def show_course_staff(courseid):
-    course_staff = show_staff_in_course(courseid)
-
-    if not course_staff:
-        print('Course does not exist.')
-        return
-
-    course = Course.query.get(course_staff.courseID)
-    print(f"Course: {course.name}, Faculty: {course.faculty}:\n")
-    print_staff_info(course_staff)
+    show_staff_in_course(courseid)
 
 
 #this command creates a course
