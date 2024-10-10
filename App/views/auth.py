@@ -33,27 +33,17 @@ def identify_page():
 def login_action():
     data = request.form
     token = login(data['username'], data['password'])
-
+    
     if not token:
         flash('Bad username or password given')
         return jsonify({"message": "Bad username or password given"}), 401
     
     flash('Login Successful')
+    response = redirect(url_for('auth_views.get_user_page'))
+    set_access_cookies(response, token)
+    return response
 
-    # For postman since request.referrer would be None
-    if request.referrer:
-        redirect_url = request.referrer
-    else:
-        redirect_url = url_for('index_views.index_page')  
 
-    response = redirect(redirect_url)
-    set_access_cookies(response, token) 
-
-    json_data = {"message": "Login successful"}
-
-    # return response, 302
-
-    return json_data, 302
 
 
 @auth_views.route('/logout', methods=['GET'])
@@ -69,13 +59,16 @@ API Routes
 
 @auth_views.route('/api/login', methods=['POST'])
 def user_login_api():
-  data = request.json
-  token = login(data['username'], data['password'])
-  if not token:
-    return jsonify(message='bad username or password given'), 401
-  response = jsonify(access_token=token) 
-  set_access_cookies(response, token)
-  return response
+    data = request.json
+    token = login(data['username'], data['password'])
+    
+    if not token:
+        return jsonify({"message": "Bad username or password given"}), 401
+    
+    response = jsonify({"access_token": token})
+    set_access_cookies(response, token)
+    return response
+
 
 @auth_views.route('/api/identify', methods=['GET'])
 @jwt_required()
